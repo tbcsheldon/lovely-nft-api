@@ -2,7 +2,6 @@
   "name": "lovely_nft_api",
   "version": "1.0.2",
   "description": "",
-  "type": "module",
   "scripts": {
     "🪐": "cross-env ELEVENTY_ENV=development eleventy --serve",
     "🚧": "cross-env ELEVENTY_ENV=staging eleventy",
@@ -19,8 +18,15 @@
   "author": "tbcsheldon",
   "license": "MIT",
   "dependencies": {
+    "@loopring-web/loopring-sdk": "^2.0.20-io.2-w2",
     "axios": "^0.27.2",
-    "fast-csv": "^4.3.6"
+    "base58-encode": "^0.2.0",
+    "bn.js": "^5.2.1",
+    "cids": "^1.1.9",
+    "esm": "^3.2.25",
+    "fast-csv": "^4.3.6",
+    "multiformats": "^9.7.1",
+    "web3-utils": "^1.7.4"
   },
   "browserslist": [
     "last 2 versions"
@@ -35,6 +41,7 @@
     "chalk": "^4.0.0",
     "cross-env": "^7.0.3",
     "datatables": "^1.10.18",
+    "dotenv": "^16.0.1",
     "eleventy-plugin-metagen": "^1.4.8",
     "eleventy-plugin-rollup": "^1.0.3",
     "html-minifier": "^4.0.0",
