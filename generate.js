@@ -161,7 +161,6 @@ async function init() {
             inc++
         }
         csvRows.push(csvRow)
-        
     }
     
     csvFile
