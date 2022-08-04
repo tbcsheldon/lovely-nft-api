@@ -3,13 +3,7 @@
   "version": "1.0.2",
   "description": "",
   "scripts": {
-    "🪐": "cross-env ELEVENTY_ENV=development eleventy --serve",
-    "🚧": "cross-env ELEVENTY_ENV=staging eleventy",
-    "🚀": "cross-env ELEVENTY_ENV=production eleventy",
-    "dev": "npm run-s 🪐",
-    "staging": "npm run-s 🚧",
-    "production": "npm run-s 🚀",
-    "start": "npm run dev"
+    "report": "node runner.js"
   },
   "repository": {
     "type": "git",
