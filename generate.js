@@ -1,23 +1,12 @@
-// Javascript goes here
 require('dotenv').config();
 import moment from 'moment';
 import axios from 'axios';
 import CsvFile from './lib/csv.js'
-
 import BN from "bn.js";
 const CID = require("cids");
 
 const delay = time => new Promise(res=>setTimeout(res,time));
 
-function useMoment(date) {
-    var date = moment(date).format("x");
-    return date;
-    // console.log(date)
-}
-
-function timeout(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 const ipfsNftIDToCid = (nftId) => {
     const hashBN = new BN(nftId.replace("0x", ""), 16);
     const hex = hashBN.toString(16, 64);
@@ -39,7 +28,6 @@ const pinataApi = async (CID) => {
 }
 
 const loopringAPI = async (url) => {
-    //fetch to generate droplet info
     let options = {
         method: 'GET',
         url: url,
@@ -75,8 +63,6 @@ async function init() {
         lastTimeStamp = moment(res.mints[res.mints.length - 1].createdAt).format("x");
     }
 
-    // console.log(mints.slice(0,2));
-
     let nftIDs = ["walletAddress"];
     let nftDatas = ["walletAddress"];
     for await (const mint of mints) {
@@ -87,7 +73,6 @@ async function init() {
 
         nftIDs.push(...nftIdAPIresponse.map(nft => { return nft.nftId }))
         nftDatas.push(...nftIdAPIresponse.map(nft => { return nft.nftData }))
-        // console.log(nftIDs.length);
     }
 
     let initinc = 0;
@@ -97,7 +82,6 @@ async function init() {
         if(nftData != "walletAddress") {
             let finalcid = ipfsNftIDToCid(nftIDs[initinc]);
             let metatadata = await pinataApi(finalcid);
-            // console.log(metatadata)
             let image = metatadata.image.replace("ipfs://", "https://loopring.mypinata.cloud/ipfs/")
             initcsvRow1[nftIDs[initinc]] = metatadata.name;
             initcsvRow2[nftIDs[initinc]] = '=IMAGE("'+image+'")';
@@ -115,8 +99,6 @@ async function init() {
             let nftHoldersAPIurl = "https://api3.loopring.io/api/v3/nft/info/nftHolders?nftData="+nftData
             let nftHoldersAPIresponse = await loopringAPI(nftHoldersAPIurl);
             
-            
-            // for( ii=0; ii < nftHoldersAPIresponse.nftHolders.length; ii++) {
             for await (const nftHolder of nftHoldersAPIresponse.nftHolders) {
                 if(!walletsIDs.includes(nftHolder.accountId)) {
                     console.clear();
@@ -146,8 +128,7 @@ async function init() {
             if(nftBalanceCheckAPIresponse.totalNum > 0) {
                 ownedNFTs.push(...nftBalanceCheckAPIresponse.data);
             }
-            // accountRow[`${nftBalanceCheckAPIresponse.data.nftId}`] = parseInt(nftBalanceCheckAPIresponse.totalNum)
-            await delay(50);
+            await delay(100);
         }
         accountRow.ownedNFTs = ownedNFTs.map(nft => { return { total: nft.total, nftData: nft.nftData } });
         accountRow.totalNum = ownedNFTs.length;
@@ -156,9 +137,9 @@ async function init() {
     }
 
     console.log("Write CSV File...");
+    let csvFileName = 'nft-report-'+process.env.LOOPRING_ACCOUNT_ID+'-'+moment().format("x")
     const csvFile = new CsvFile({
-        path: 'append.tmp.csv',
-        // headers to write
+        path: 'reports/'+csvFileName+'.csv',
         headers: [...nftIDs],
     });
 
